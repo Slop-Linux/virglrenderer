@@ -448,7 +448,10 @@ asahi_ccmd_get_params(struct drm_context *dctx, struct vdrm_ccmd_req *hdr)
    if (!rsp)
       return -ENOMEM;
 
-   if (req->params.param_group != 0) {
+   /* Group 0: global parameters. Group 1 (g16 kernel): AGXGPUCoreConfig, which the
+    * g16 Vulkan driver reads at device creation (getDeviceConfig, selector 0x100).
+    */
+   if (req->params.param_group > 1) {
       rsp->ret = -EINVAL;
       return 0;
    }
